@@ -1550,6 +1550,29 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mHasNavigationBar = true;
         }
 
+	// Override depending on /proc/touchscreen/keypad_enable
+	final String keypad_enable = "/proc/touchpanel/keypad_enable";
+	FileReader reader = null;
+	try {
+		reader = new FileReader(keypad_enable);
+		char[] buf = new char[15];
+		int n = reader.read(buf);
+			if (n == 0) {
+				mHasNavigationBar = true;
+			} else {
+				mHasNavigationBar = false;
+			}
+	} catch (IOException ex || NumberFormatException ex) {
+		Slog.w(TAG, "Couldn't read keypad state from " + keypad_enable + ": " + ex);
+	} finally {
+		if (reader != null) {
+			try {
+				reader.close();
+			} catch (IOException ex) {
+			}
+		}
+	}
+
         // For demo purposes, allow the rotation of the HDMI display to be controlled.
         // By default, HDMI locks rotation to landscape.
         if ("portrait".equals(SystemProperties.get("persist.demo.hdmirotation"))) {
