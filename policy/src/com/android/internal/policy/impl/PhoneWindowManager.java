@@ -1562,7 +1562,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 			} else {
 				mHasNavigationBar = false;
 			}
-	} catch (IOException ex || NumberFormatException ex) {
+	} catch (IOException | NumberFormatException ex) {
 		Slog.w(TAG, "Couldn't read keypad state from " + keypad_enable + ": " + ex);
 	} finally {
 		if (reader != null) {
